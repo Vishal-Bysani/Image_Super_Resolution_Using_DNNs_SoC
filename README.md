@@ -11,12 +11,11 @@ This is an attempt to implement the [research paper](https://github.com/Vishal-B
 
 To recover $I^{SR}$, a 3 layer convolutional network is used. In our architecture, we first apply a 2 layer convolutional neural network directly to the LR image, and then apply a sub-pixel convolution layer that upscales the LR feature maps to produce $I^{SR}$.
 
-For the ESPCN, we set (f1 , n1 ) = (5, 64), (f2 , n2 ) = (3, 32) and f3 = 3 in our evaluations. In the training phase, 17r x 17r pixel sub-images are extracted from the training ground truth images $I^{HR}$ , where r is the upscaling factor.
-To synthesize the low-resolution samples ILR , we blur IHR
-using a Gaussian filter and sub-sample it by the upscaling
-factor. The sub-imagesP
-are extracted from original images
-with a stride ofP
-(17
-mod (f, 2)) ⇥ r from IHR and a
-stride of 17-mod (f, 2) from ILR . This ensures that all pixels in the original image appear once and only once as the ground truth of the training data. The activation function used in the model is tanh function.
+For the ESPCN, we set (f1 , n1 ) = (5, 64), (f2 , n2 ) = (3, 32) and f3 = 3 in our evaluations. In the training phase, 17r x 17r pixel sub-images are extracted from the training ground truth images $I^{HR}$ , where r is the upscaling factor. To synthesize the low-resolution samples $I^{LR}$ , we blur $I^{HR}$ using a Gaussian filter and sub-sample it by the upscaling factor. The sub-images are extracted from original images with a stride of (17-&Sigma;mod (f, 2)) x r from $I^{HR}$ and a stride of 17-&Sigma;mod (f, 2) from ILR . This ensures that all pixels in the original image appear once and only once as the ground truth of the training data. The activation function used in the model is tanh function.
+
+## Setup
+Please setup your training environemnt by installing the requirements using:
+
+```
+$ pip install -r requirements.txt
+```
