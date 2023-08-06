@@ -19,3 +19,28 @@ Please setup your training environemnt by installing the requirements using:
 ```
 $ pip install -r requirements.txt
 ```
+
+## Training
+To run the model training, use the following command:
+
+```
+$ python3 train.py -t ./dataset/train -v ./dataset/val -o ./assets/models/
+```
+
+This will train the model and save the model's weights as `state_dict()` to the `assets/models/` folder.
+
+## Testing
+To test the model, use the following command:
+
+```
+$ python3 infer.py -w ./assets/models/best.pth -i ./dataset/test/monarch.png -o ./assets/dataset/outputs
+```
+
+
+
+
+
+
+
+
+
