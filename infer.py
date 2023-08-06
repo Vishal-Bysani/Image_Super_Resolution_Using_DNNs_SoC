@@ -36,7 +36,7 @@ def prepare_image(hr_image, device):
         args.dirpath_out,
         os.path.basename(args.fpath_image).replace(".png", f"_bicubic_x{args.scaling_factor}.png")
     ))
-
+    lr_image2=lr_image
     # Convert PIL image to numpy array
     hr_image = np.array(hr_image).astype(np.float32)
     lr_image = np.array(lr_image).astype(np.float32)
@@ -63,7 +63,7 @@ def prepare_image(hr_image, device):
     lr_y = torch.from_numpy(lr_y).to(device)
     lr_y = lr_y.unsqueeze(0).unsqueeze(0)
 
-    return lr_y, hr_y, bicubic_image_ycrcb, bicubic_image
+    return lr_image2,lr_y, hr_y, bicubic_image_ycrcb, bicubic_image
 
 
 def infer(args):
@@ -85,7 +85,7 @@ def infer(args):
     # Read & Prepare Image for Inference
     # Load HR image: rH x rW x C, r: scaling factor
     hr_image = Image.open(args.fpath_image).convert('RGB')
-    lr_y, hr_y, ycbcr, bicubic_image = prepare_image(hr_image, device)
+    lr_image,lr_y, hr_y, ycbcr, bicubic_image = prepare_image(hr_image, device)
 
     with torch.no_grad():
         preds = model(lr_y)
@@ -104,13 +104,15 @@ def infer(args):
     ))
 
     # Plot Image Comparison
-    fig, (ax1, ax2, ax3) = plt.subplots(1, 3)
-    ax1.imshow(np.array(hr_image))
-    ax1.set_title("HR Image")
-    ax2.imshow(bicubic_image)
-    ax2.set_title("Bicubic Image x3")
-    ax3.imshow(np.array(output))
-    ax3.set_title("SR Image x3 (PSNR: {:.2f} dB)".format(psnr_hr_sr))
+    fig, ((ax1, ax2), (ax3,ax4)) = plt.subplots(2, 2)
+    ax1.imshow(np.array(lr_image))
+    ax1.set_title("LR Image")
+    ax2.imshow(np.array(hr_image))
+    ax2.set_title("HR Image")
+    ax3.imshow(bicubic_image)
+    ax3.set_title("Bicubic Image x3")
+    ax4.imshow(np.array(output))
+    ax4.set_title("SR Image x3 (PSNR: {:.2f} dB)".format(psnr_hr_sr))
     fig.suptitle('ESPCN Single Image Super Resolution')
     plt.show()
     fig.set_size_inches(20, 10, forward=True)
