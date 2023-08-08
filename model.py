@@ -14,7 +14,6 @@ class ESPCN(nn.Module):
         super(ESPCN, self).__init__()
 
         # As per paper, 3 conv layers in backbone, adding padding is optional, not mentioned to use in paper
-        # SRCNN paper does not recommend using padding, padding here just helps to visualize the scaled up output image
         # Extract input image feature maps
         self.feature_map_layer = nn.Sequential(
             # (f1,n1) = (5, 64)
@@ -37,7 +36,6 @@ class ESPCN(nn.Module):
 
     def forward(self, x):
         """
-
         :param x: input image
         :return: model output
         """

@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 from torch.utils.data import IterableDataset, DataLoader
 
 
-# Ref.: https://github.com/yjn870/ESPCN-pytorch/blob/ab84ee1bccb2978f2f9b88f9e0315d9be12c099e/prepare.py#L16
-# Train Dataset Class
+
+#To generate a Training Dataset
 class SRTrainDataset(IterableDataset):
     def __init__(self, dirpath_images, scaling_factor, patch_size, stride):
         """ Training Dataset
@@ -27,20 +27,20 @@ class SRTrainDataset(IterableDataset):
 
     def __iter__(self):
         for fpath_image in glob(os.path.join(self.dirpath_images, "*.png")):
-            # Load HR image: rH x rW x C, r: scaling factor
+            # Load HR image: rH x rW x C,where r is scaling factor
             hr_image = Image.open(fpath_image).convert('RGB')
             hr_width = (hr_image.width // self.scaling_factor) * self.scaling_factor
             hr_height = (hr_image.height // self.scaling_factor) * self.scaling_factor
             hr_image = hr_image.resize((hr_width, hr_height), resample=Image.BICUBIC)
 
             # LR Image: H x W x C
-            # As in paper, Sec. 3.2: sub-sample images by up-scaling factor
+            # As per paper, sub-sample images by up-scaling factor
             lr_image = hr_image.resize((hr_width // self.scaling_factor, hr_height // self.scaling_factor), resample=Image.BICUBIC)
 
             hr_image = np.array(hr_image).astype(np.float32)
             lr_image = np.array(lr_image).astype(np.float32)
 
-            # Convert BGR to YCbCr
+            # Convert BGR to YCbCr(Y (luminance), Cr (red chrominance), and Cb (blue chrominance))
             hr_image = cv2.cvtColor(hr_image, cv2.COLOR_RGB2YCrCb)
             lr_image = cv2.cvtColor(lr_image, cv2.COLOR_RGB2YCrCb)
 
@@ -50,8 +50,7 @@ class SRTrainDataset(IterableDataset):
 
             # Get sub-image from Ihr and Ilr as per Sec. 3.2 in paper
             # using patch_size = 17 and stride = 13
-            # This ensures that all pixels in the original image appear once and only once as the ground truth of the
-            # training data
+            # This extracts patches from the HR and LR image, and makes sure that the pixels are not repeated in any 2 patches
             rows = lr_y.shape[0]
             cols = lr_y.shape[1]
             for i in range(0, rows - self.patch_size + 1, self.stride):
@@ -69,7 +68,7 @@ class SRTrainDataset(IterableDataset):
         return len(self.all_images)
 
 
-# Valid Dataset Class
+#To make validation dataset
 class SRValidDataset(IterableDataset):
     def __init__(self, dirpath_images, scaling_factor):
         """ Validation Dataset
@@ -112,7 +111,6 @@ class SRValidDataset(IterableDataset):
         return len(self.all_images)
 
 
-# Ref.: https://discuss.pytorch.org/t/how-to-shuffle-an-iterable-dataset/64130/6
 class ShuffleDataset(IterableDataset):
     def __init__(self, dataset, buffer_size):
         super().__init__()
