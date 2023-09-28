@@ -1,7 +1,7 @@
 # Image_Super_Resolution_Using_DNNs_SoC
 
 ## Abstract
-In this project we employ an Efficient Sub-Pixel Convolutional Neural Network (ESPCN) for real-time singl image and video super-resolution. The recovery of a high resolution (HR) image or video
+In this project we employ an Efficient Sub-Pixel Convolutional Neural Network (ESPCN) for real-time single image and video super-resolution. The recovery of a high resolution (HR) image or video
 from its low resolution (LR) counter part is topic of great interest in digital image processing. This task is referred to as super-resolution and finds great applications in medical imaging, satellite imaging, face recognition and surveillance.
 
 ---
